@@ -16,6 +16,7 @@ import {
   MoreHorizontal,
   Archive,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -457,19 +458,28 @@ export default function DashboardPage() {
                       )}
                     </div>
                     <DialogFooter>
-                      <DialogClose asChild>
-                        <Button variant="outline" onClick={resetDialog}>Cancel</Button>
-                      </DialogClose>
+                      
                       { !analysisResult ? (
-                        <Button onClick={handleFileClaim} disabled={isAnalyzing || !imageFile || !claimDetails.crop}>
-                          {isAnalyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                          {isAnalyzing ? "Analyzing..." : "Analyze Damage"}
-                        </Button>
+                        <>
+                          <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </DialogClose>
+                          <Button onClick={handleFileClaim} disabled={isAnalyzing || !imageFile || !claimDetails.crop}>
+                            {isAnalyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {isAnalyzing ? "Analyzing..." : "Submit for Analysis"}
+                          </Button>
+                        </>
                       ) : (
-                        <Button onClick={handleGenerateReport} disabled={isGeneratingReport}>
-                          {isGeneratingReport && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                          {isGeneratingReport ? "Generating..." : "Generate Claim Report"}
-                        </Button>
+                        <>
+                          <Button variant="outline" onClick={() => setAnalysisResult(null)}>
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back
+                          </Button>
+                          <Button onClick={handleGenerateReport} disabled={isGeneratingReport}>
+                            {isGeneratingReport && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {isGeneratingReport ? "Generating..." : "Generate Claim Report"}
+                          </Button>
+                        </>
                       )}
                     </DialogFooter>
                   </DialogContent>
