@@ -444,6 +444,15 @@ export default function DashboardPage() {
                             <Label htmlFor="description">Description (Optional)</Label>
                             <Textarea id="description" placeholder="Provide any additional details about the damage." value={claimDetails.description} onChange={(e) => setClaimDetails({...claimDetails, description: e.target.value})} />
                           </div>
+                          <div className="flex justify-end gap-2 mt-4">
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button onClick={handleFileClaim} disabled={isAnalyzing || !imageFile || !claimDetails.crop}>
+                              {isAnalyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                              {isAnalyzing ? "Analyzing..." : "Submit for Analysis"}
+                            </Button>
+                          </div>
                         </>
                       ) : (
                         <div>
@@ -463,20 +472,8 @@ export default function DashboardPage() {
                         </div>
                       )}
                     </div>
-                    <DialogFooter>
-                      
-                      { !analysisResult ? (
-                        <>
-                          <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                          </DialogClose>
-                          <Button onClick={handleFileClaim} disabled={isAnalyzing || !imageFile || !claimDetails.crop}>
-                            {isAnalyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isAnalyzing ? "Analyzing..." : "Submit for Analysis"}
-                          </Button>
-                        </>
-                      ) : (
-                        <>
+                    { analysisResult && (
+                      <DialogFooter>
                           <Button variant="outline" onClick={() => setAnalysisResult(null)}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back
@@ -485,9 +482,8 @@ export default function DashboardPage() {
                             {isGeneratingReport && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {isGeneratingReport ? "Generating..." : "Generate Claim Report"}
                           </Button>
-                        </>
-                      )}
-                    </DialogFooter>
+                      </DialogFooter>
+                    )}
                   </DialogContent>
                 </Dialog>
               </div>
