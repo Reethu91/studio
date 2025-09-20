@@ -288,22 +288,15 @@ export default function DashboardPage() {
                 <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Dashboard</span>
               </Link>
               <Link
-                href="/dashboard"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <Package className="h-5 w-5" />
-                <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Claims</span>
-              </Link>
-              <Link
                 href="/customers"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary"
               >
                 <Users className="h-5 w-5" />
                 <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Customers</span>
               </Link>
               <Link
                 href="/analytics"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary"
               >
                 <LineChart className="h-5 w-5" />
                 <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Analytics</span>
@@ -338,13 +331,6 @@ export default function DashboardPage() {
                 >
                   <Home className="h-5 w-5" />
                   Dashboard
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Claims
                 </Link>
                 <Link
                   href="/customers"
@@ -647,3 +633,5 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    
