@@ -13,7 +13,8 @@ import {
   PlusCircle,
   Upload,
   Loader2,
-  MoreHorizontal
+  MoreHorizontal,
+  Archive,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -66,7 +67,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { analyzeUploadedImage, AnalyzeUploadedImageOutput } from "@/ai/flows/analyze-uploaded-image-for-crop-damage"
 import { generateClaimReport } from "@/ai/flows/generate-claim-report-from-damage-analysis"
 import { useToast } from "@/hooks/use-toast"
@@ -75,11 +76,13 @@ import { Badge } from "@/components/ui/badge"
 import { uploadFile } from "@/services/firebase"
 
 
+type ClaimStatus = 'Pending' | 'Analyzed' | 'Reported' | 'Archived';
+
 type Claim = {
   id: string;
   crop: string;
   damageType: string;
-  status: 'Pending' | 'Analyzed' | 'Reported';
+  status: ClaimStatus;
   dateFiled: string;
   analysis?: AnalyzeUploadedImageOutput;
   reportSummary?: string;
@@ -98,6 +101,9 @@ export default function DashboardPage() {
   const [claimDetails, setClaimDetails] = useState({ crop: '', description: '' });
   const { toast } = useToast();
   const [claimImageUrl, setClaimImageUrl] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('all');
+  const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
+  const [isViewClaimOpen, setIsViewClaimOpen] = useState(false);
 
   const handleFileClaim = async () => {
     if (!imageFile || !claimDetails.crop) {
@@ -188,7 +194,6 @@ export default function DashboardPage() {
     }
   };
 
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -208,7 +213,57 @@ export default function DashboardPage() {
     setClaimDetails({ crop: '', description: '' });
     setClaimImageUrl(null);
   };
+  
+  const handleViewDetails = (claim: Claim) => {
+    setSelectedClaim(claim);
+    setIsViewClaimOpen(true);
+  };
 
+  const handleDownloadReport = (claim: Claim) => {
+    if (!claim.reportSummary) return;
+    const blob = new Blob([claim.reportSummary], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Claim_Report_${claim.id}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  const handleArchiveClaim = (claimId: string) => {
+    setClaims(claims.map(c => c.id === claimId ? { ...c, status: 'Archived' } : c));
+    toast({
+      title: "Claim Archived",
+      description: `Claim ${claimId} has been moved to the archive.`,
+    });
+  };
+
+  const filteredClaims = useMemo(() => {
+    if (activeTab === 'all') {
+      return claims.filter(c => c.status !== 'Archived');
+    }
+    if (activeTab === 'active') {
+       return claims.filter(c => c.status === 'Pending' || c.status === 'Analyzed');
+    }
+    if (activeTab === 'reported') {
+      return claims.filter(c => c.status === 'Reported');
+    }
+    if (activeTab === 'archived') {
+      return claims.filter(c => c.status === 'Archived');
+    }
+    return claims;
+  }, [claims, activeTab]);
+
+  const getStatusVariant = (status: ClaimStatus) => {
+    switch (status) {
+      case 'Reported':
+        return 'default';
+      case 'Archived':
+        return 'destructive';
+      default:
+        return 'secondary';
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -351,12 +406,12 @@ export default function DashboardPage() {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Tabs defaultValue="all">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="draft">Draft</TabsTrigger>
+                <TabsTrigger value="reported">Reported</TabsTrigger>
                 <TabsTrigger value="archived" className="hidden sm:flex">
                   Archived
                 </TabsTrigger>
@@ -449,78 +504,164 @@ export default function DashboardPage() {
                 </Dialog>
               </div>
             </div>
-            <TabsContent value="all">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Claims</CardTitle>
-                  <CardDescription>
-                    Manage and view your crop damage claims.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Claim ID</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Crop
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Damage Type
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Date Filed
-                        </TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                    {claims.length > 0 ? (
-                        claims.map((claim) => (
-                          <TableRow key={claim.id}>
-                            <TableCell className="font-medium">{claim.id}</TableCell>
-                            <TableCell>
-                              <Badge variant={claim.status === 'Reported' ? 'default' : 'secondary'}>{claim.status}</Badge>
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">{claim.crop}</TableCell>
-                            <TableCell className="hidden md:table-cell">{claim.damageType}</TableCell>
-                            <TableCell className="hidden md:table-cell">{claim.dateFiled}</TableCell>
-                            <TableCell>
-                               <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button aria-haspopup="true" size="icon" variant="ghost">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Toggle menu</span>
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuItem>View Details</DropdownMenuItem>
-                                  <DropdownMenuItem>Download Report</DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
+              <TabsContent value={activeTab}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Claims</CardTitle>
+                    <CardDescription>
+                      Manage and view your crop damage claims.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center h-24">No claims filed yet.</TableCell>
+                          <TableHead>Claim ID</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Crop
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Damage Type
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Date Filed
+                          </TableHead>
+                          <TableHead>
+                            <span className="sr-only">Actions</span>
+                          </TableHead>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                      </TableHeader>
+                      <TableBody>
+                      {filteredClaims.length > 0 ? (
+                          filteredClaims.map((claim) => (
+                            <TableRow key={claim.id}>
+                              <TableCell className="font-medium">{claim.id}</TableCell>
+                              <TableCell>
+                                <Badge variant={getStatusVariant(claim.status)}>{claim.status}</Badge>
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">{claim.crop}</TableCell>
+                              <TableCell className="hidden md:table-cell">{claim.damageType}</TableCell>
+                              <TableCell className="hidden md:table-cell">{claim.dateFiled}</TableCell>
+                              <TableCell>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                      <span className="sr-only">Toggle menu</span>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuItem onSelect={() => handleViewDetails(claim)}>View Details</DropdownMenuItem>
+                                    <DropdownMenuItem onSelect={() => handleDownloadReport(claim)} disabled={!claim.reportSummary}>Download Report</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    {claim.status !== 'Archived' && (
+                                       <DropdownMenuItem onSelect={() => handleArchiveClaim(claim.id)} className="text-destructive">
+                                          <Archive className="mr-2 h-4 w-4" />
+                                          Archive
+                                      </DropdownMenuItem>
+                                    )}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center h-24">No claims in this category.</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
           </Tabs>
         </main>
       </div>
+
+       <Dialog open={isViewClaimOpen} onOpenChange={setIsViewClaimOpen}>
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Claim Details: {selectedClaim?.id}</DialogTitle>
+              <DialogDescription>
+                Review the details of your filed claim.
+              </DialogDescription>
+            </DialogHeader>
+            {selectedClaim && (
+              <div className="grid gap-6 py-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Claim Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid md:grid-cols-2 gap-4">
+                     <div>
+                       {selectedClaim.imageUrl && <Image src={selectedClaim.imageUrl} alt={`Damage for claim ${selectedClaim.id}`} width={400} height={225} className="rounded-md object-cover aspect-video" />}
+                    </div>
+                     <div className="grid gap-2 text-sm">
+                        <div className="grid grid-cols-[120px_1fr] items-center">
+                          <p className="font-semibold">Claim ID:</p>
+                          <p>{selectedClaim.id}</p>
+                        </div>
+                        <div className="grid grid-cols-[120px_1fr] items-center">
+                          <p className="font-semibold">Crop Type:</p>
+                          <p>{selectedClaim.crop}</p>
+                        </div>
+                         <div className="grid grid-cols-[120px_1fr] items-center">
+                          <p className="font-semibold">Date Filed:</p>
+                          <p>{selectedClaim.dateFiled}</p>
+                        </div>
+                        <div className="grid grid-cols-[120px_1fr] items-center">
+                          <p className="font-semibold">Status:</p>
+                          <Badge variant={getStatusVariant(selectedClaim.status)}>{selectedClaim.status}</Badge>
+                        </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {selectedClaim.analysis && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>AI Analysis Results</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid gap-2 text-sm">
+                      <div className="grid grid-cols-[120px_1fr] items-center">
+                        <p className="font-semibold">Damage Type:</p>
+                        <p>{selectedClaim.analysis.damageType}</p>
+                      </div>
+                      <div className="grid grid-cols-[120px_1fr] items-center">
+                        <p className="font-semibold">Damage Extent:</p>
+                        <p>{selectedClaim.analysis.damageExtent}</p>
+                      </div>
+                       <div>
+                        <p className="font-semibold">Additional Notes:</p>
+                        <p className="text-muted-foreground">{selectedClaim.analysis.additionalNotes}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                {selectedClaim.reportSummary && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Generated Report Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{selectedClaim.reportSummary}</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsViewClaimOpen(false)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </div>
   )
 }
     
 
     
+
