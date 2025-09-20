@@ -311,23 +311,25 @@ export default function DashboardPage() {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div
+                <Link
+                  href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users className="h-5 w-5" />
                   <span className="sr-only">Customers</span>
-                </div>
+                </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Customers (Coming Soon)</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                 <div
+                 <Link
+                  href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <LineChart className="h-5 w-5" />
                   <span className="sr-only">Analytics</span>
-                </div>
+                </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Analytics (Coming Soon)</TooltipContent>
             </Tooltip>
@@ -670,6 +672,7 @@ export default function DashboardPage() {
     
 
     
+
 
 
 
