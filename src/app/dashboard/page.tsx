@@ -265,8 +265,8 @@ export default function DashboardPage() {
     <div className="flex min-h-screen w-full flex-col bg-muted/40 relative group">
        <div 
         className="absolute inset-0 bg-cover bg-center z-0"
-        style={{ backgroundImage: "url('https://picsum.photos/seed/greenery/1920/1080')" }}
-        data-ai-hint="tea plantation"
+        style={{ backgroundImage: "url('https://picsum.photos/seed/inspection/1920/1080')" }}
+        data-ai-hint="drone field"
       >
         <div className="absolute inset-0 bg-black/30" />
       </div>
