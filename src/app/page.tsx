@@ -12,11 +12,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Leaf } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 export default function SignUpPage() {
+  const router = useRouter();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Handle account creation logic here
     console.log("Form submitted");
+    router.push('/dashboard');
   };
 
   return (
@@ -31,7 +36,7 @@ export default function SignUpPage() {
             Create an account to get started.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-2">
@@ -52,7 +57,7 @@ export default function SignUpPage() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-4 px-6 pb-6 pt-0">
+        <CardFooter className="flex-col gap-4 px-6 pb-6 pt-4">
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="#" className="font-medium text-primary underline-offset-4 hover:underline">
