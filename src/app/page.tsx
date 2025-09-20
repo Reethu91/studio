@@ -31,7 +31,7 @@ export default function SignUpPage() {
             Create an account to get started.
           </CardDescription>
         </CardHeader>
-        <CardContent className="px-6 pb-0">
+        <CardContent className="p-6">
           <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-2">
@@ -52,7 +52,7 @@ export default function SignUpPage() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-4 p-6">
+        <CardFooter className="flex-col gap-4 px-6 pb-6 pt-0">
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="#" className="font-medium text-primary underline-offset-4 hover:underline">
