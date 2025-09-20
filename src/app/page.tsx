@@ -27,11 +27,11 @@ export default function SignUpPage() {
   return (
     <main 
       className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8 bg-cover bg-center"
-      style={{ backgroundImage: "url('https://picsum.photos/seed/10/1920/1080')" }}
-      data-ai-hint="field landscape"
+      style={{ backgroundImage: "url('https://picsum.photos/seed/forest/1920/1080')" }}
+      data-ai-hint="forest path"
     >
-      <div className="absolute inset-0 bg-black/50" />
-      <Card className="w-full max-w-md shadow-lg rounded-xl z-10">
+      <div className="absolute inset-0 bg-black/60" />
+      <Card className="w-full max-w-md shadow-lg rounded-xl z-10 animate-fade-in-up">
         <CardHeader className="text-center p-6">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary mb-4">
             <Leaf className="h-8 w-8 text-primary-foreground" />
