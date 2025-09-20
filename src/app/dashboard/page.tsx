@@ -74,11 +74,12 @@ import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { uploadFile } from "@/services/firebase"
+import { exampleClaims } from "@/lib/example-claims";
 
 
 type ClaimStatus = 'Pending' | 'Analyzed' | 'Reported' | 'Archived';
 
-type Claim = {
+export type Claim = {
   id: string;
   crop: string;
   damageType: string;
@@ -91,7 +92,7 @@ type Claim = {
 
 
 export default function DashboardPage() {
-  const [claims, setClaims] = useState<Claim[]>([]);
+  const [claims, setClaims] = useState<Claim[]>(exampleClaims);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
@@ -671,5 +672,6 @@ export default function DashboardPage() {
     
 
     
+
 
 
