@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +14,11 @@ import { Leaf } from "lucide-react";
 import Link from "next/link";
 
 export default function SignUpPage() {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted");
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8">
       <Card className="w-full max-w-md shadow-lg rounded-xl">
@@ -25,8 +31,8 @@ export default function SignUpPage() {
             Create an account to get started.
           </CardDescription>
         </CardHeader>
-        <CardContent className="px-6 pb-6">
-          <form>
+        <CardContent className="px-6 pb-0">
+          <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="name">Full Name</Label>
@@ -40,13 +46,13 @@ export default function SignUpPage() {
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" placeholder="••••••••" />
               </div>
+              <Button className="w-full" type="submit">
+                Create Account
+              </Button>
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-4 p-6 pt-0">
-          <Button className="w-full" type="submit">
-            Create Account
-          </Button>
+        <CardFooter className="flex-col gap-4 p-6">
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="#" className="font-medium text-primary underline-offset-4 hover:underline">
