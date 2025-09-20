@@ -12,7 +12,8 @@ import {
   Users,
   PlusCircle,
   Upload,
-  Loader2
+  Loader2,
+  MoreHorizontal
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -71,6 +72,7 @@ import { generateClaimReport } from "@/ai/flows/generate-claim-report-from-damag
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
+import { uploadFile } from "@/services/firebase"
 
 
 type Claim = {
@@ -81,6 +83,7 @@ type Claim = {
   dateFiled: string;
   analysis?: AnalyzeUploadedImageOutput;
   reportSummary?: string;
+  imageUrl?: string;
 };
 
 
@@ -94,6 +97,7 @@ export default function DashboardPage() {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeUploadedImageOutput | null>(null);
   const [claimDetails, setClaimDetails] = useState({ crop: '', description: '' });
   const { toast } = useToast();
+  const [claimImageUrl, setClaimImageUrl] = useState<string | null>(null);
 
   const handleFileClaim = async () => {
     if (!imageFile || !claimDetails.crop) {
@@ -111,6 +115,12 @@ export default function DashboardPage() {
       reader.readAsDataURL(imageFile);
       reader.onload = async () => {
         const photoDataUri = reader.result as string;
+
+        // Upload image to Firebase Storage
+        const filePath = `claims/${new Date().toISOString()}-${imageFile.name}`;
+        const downloadURL = await uploadFile(photoDataUri, filePath);
+        setClaimImageUrl(downloadURL);
+
 
         const analysis = await analyzeUploadedImage({ photoDataUri });
         setAnalysisResult(analysis);
@@ -155,6 +165,7 @@ export default function DashboardPage() {
         dateFiled: new Date().toLocaleDateString(),
         analysis: analysisResult,
         reportSummary: report.reportSummary,
+        imageUrl: claimImageUrl ?? undefined,
       };
 
       setClaims(prevClaims => [newClaim, ...prevClaims]);
@@ -195,6 +206,7 @@ export default function DashboardPage() {
     setImageFile(null);
     setAnalysisResult(null);
     setClaimDetails({ crop: '', description: '' });
+    setClaimImageUrl(null);
   };
 
 
