@@ -311,27 +311,25 @@ export default function DashboardPage() {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors md:h-8 md:w-8 cursor-not-allowed"
                 >
                   <Users className="h-5 w-5" />
                   <span className="sr-only">Customers</span>
-                </Link>
+                </div>
               </TooltipTrigger>
-              <TooltipContent side="right">Customers</TooltipContent>
+              <TooltipContent side="right">Customers (Coming Soon)</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                 <div
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors md:h-8 md:w-8 cursor-not-allowed"
                 >
                   <LineChart className="h-5 w-5" />
                   <span className="sr-only">Analytics</span>
-                </Link>
+                </div>
               </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
+              <TooltipContent side="right">Analytics (Coming Soon)</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -370,14 +368,14 @@ export default function DashboardPage() {
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground/50 cursor-not-allowed"
                 >
                   <Users className="h-5 w-5" />
                   Customers
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground/50 cursor-not-allowed"
                 >
                   <LineChart className="h-5 w-5" />
                   Analytics
@@ -672,6 +670,7 @@ export default function DashboardPage() {
     
 
     
+
 
 
 
