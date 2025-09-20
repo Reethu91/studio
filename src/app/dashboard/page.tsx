@@ -312,7 +312,7 @@ export default function DashboardPage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors hover:text-foreground/80 md:h-8 md:w-8"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users className="h-5 w-5" />
                   <span className="sr-only">Customers</span>
@@ -323,7 +323,7 @@ export default function DashboardPage() {
             <Tooltip>
               <TooltipTrigger asChild>
                  <div
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors hover:text-foreground/80 md:h-8 md:w-8"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <LineChart className="h-5 w-5" />
                   <span className="sr-only">Analytics</span>
@@ -368,14 +368,14 @@ export default function DashboardPage() {
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground/50 cursor-not-allowed"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Users className="h-5 w-5" />
                   Customers
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground/50 cursor-not-allowed"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <LineChart className="h-5 w-5" />
                   Analytics
@@ -670,6 +670,7 @@ export default function DashboardPage() {
     
 
     
+
 
 
 
