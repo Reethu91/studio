@@ -29,7 +29,12 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    // Allow data URIs
+    domains: [''],
   },
+  
 };
 
 export default nextConfig;
+
+    
