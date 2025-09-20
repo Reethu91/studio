@@ -46,7 +46,7 @@ export default function CustomersPage() {
               </Link>
               <Link
                 href="/customers"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-accent text-accent-foreground transition-all hover:text-primary"
+                className="flex w-full items-center gap-3 rounded-lg bg-accent px-3 py-2 text-accent-foreground transition-all hover:text-primary"
               >
                 <Users className="h-5 w-5" />
                 <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Customers</span>
@@ -80,5 +80,3 @@ export default function CustomersPage() {
     </div>
   )
 }
-
-    

@@ -283,7 +283,7 @@ export default function DashboardPage() {
             <div className="flex flex-col items-start gap-2 w-full">
               <Link
                 href="/dashboard"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-accent text-accent-foreground transition-all hover:text-primary"
+                className="flex w-full items-center gap-3 rounded-lg bg-accent px-3 py-2 text-accent-foreground transition-all hover:text-primary"
               >
                 <Home className="h-5 w-5" />
                 <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Dashboard</span>
@@ -381,12 +381,18 @@ export default function DashboardPage() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 animate-fade-in-up">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="reported">Reported</TabsTrigger>
-                <TabsTrigger value="archived" className="hidden sm:flex">
-                  Archived
+              <TabsList className="bg-transparent p-0 gap-2">
+                <TabsTrigger value="all" asChild>
+                  <Button variant={activeTab === 'all' ? 'default' : 'outline'}>All</Button>
+                </TabsTrigger>
+                <TabsTrigger value="active" asChild>
+                   <Button variant={activeTab === 'active' ? 'default' : 'outline'}>Active</Button>
+                </TabsTrigger>
+                <TabsTrigger value="reported" asChild>
+                   <Button variant={activeTab === 'reported' ? 'default' : 'outline'}>Reported</Button>
+                </TabsTrigger>
+                <TabsTrigger value="archived" className="hidden sm:flex" asChild>
+                   <Button variant={activeTab === 'archived' ? 'default' : 'outline'}>Archived</Button>
                 </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
@@ -487,7 +493,7 @@ export default function DashboardPage() {
               </div>
             </div>
               <TabsContent value={activeTab}>
-                <Card className="bg-background/80 backdrop-blur-sm">
+                <Card className="bg-background/60 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Claims</CardTitle>
                     <CardDescription>
@@ -643,5 +649,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    
