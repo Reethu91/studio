@@ -15,6 +15,7 @@ import {
   Loader2,
   MoreHorizontal,
   Archive,
+  ChevronRight,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -49,12 +50,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import {
   Dialog,
   DialogContent,
@@ -267,7 +262,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40 relative">
+    <div className="flex min-h-screen w-full flex-col bg-muted/40 relative group">
        <div 
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{ backgroundImage: "url('https://picsum.photos/seed/greenery/1920/1080')" }}
@@ -275,68 +270,51 @@ export default function DashboardPage() {
       >
         <div className="absolute inset-0 bg-black/30" />
       </div>
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background/80 backdrop-blur-sm sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
-            <Link
+      <aside className="fixed inset-y-0 left-0 z-10 w-14 flex-col border-r bg-background/80 backdrop-blur-sm sm:flex transition-all duration-300 ease-in-out group-hover:w-56">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 h-full">
+           <Link
               href="/dashboard"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base mb-4"
             >
               <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
               <span className="sr-only">CropClaim AI</span>
             </Link>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/dashboard"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Home className="h-5 w-5" />
-                  <span className="sr-only">Dashboard</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/dashboard"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Package className="h-5 w-5" />
-                  <span className="sr-only">Claims</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Claims</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/customers"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Users className="h-5 w-5" />
-                  <span className="sr-only">Customers</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Customers</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                 <Link
-                  href="/analytics"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <LineChart className="h-5 w-5" />
-                  <span className="sr-only">Analytics</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+            <div className="flex flex-col items-start gap-2 w-full">
+              <Link
+                href="/dashboard"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 bg-accent text-accent-foreground transition-all hover:text-primary"
+              >
+                <Home className="h-5 w-5" />
+                <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Dashboard</span>
+              </Link>
+              <Link
+                href="/dashboard"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <Package className="h-5 w-5" />
+                <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Claims</span>
+              </Link>
+              <Link
+                href="/customers"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <Users className="h-5 w-5" />
+                <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Customers</span>
+              </Link>
+              <Link
+                href="/analytics"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <LineChart className="h-5 w-5" />
+                <span className="overflow-hidden whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Analytics</span>
+              </Link>
+            </div>
+          <div className="mt-auto flex items-center justify-center p-2 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+             <ChevronRight className="h-6 w-6 transform rotate-180" />
+          </div>
         </nav>
       </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 z-10">
+      <div className="flex flex-col sm:gap-4 sm:py-4 z-10 sm:pl-14 transition-all duration-300 ease-in-out group-hover:sm:pl-56">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
             <SheetTrigger asChild>
